@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="헤더 파일\States">
+      <UniqueIdentifier>{6c3e2a03-b7e6-4761-9bcb-9e1d2a58db21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\States">
+      <UniqueIdentifier>{02d5adea-2c78-4128-89f1-7aa239fd3c8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLogic.cpp">
@@ -27,6 +33,30 @@
     <ClCompile Include="ScreenLogic.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HunterState.cpp">
+      <Filter>소스 파일\States</Filter>
+    </ClCompile>
+    <ClCompile Include="HuntedState.cpp">
+      <Filter>소스 파일\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EatenState.cpp">
+      <Filter>소스 파일\States</Filter>
+    </ClCompile>
+    <ClCompile Include="InBoxState.cpp">
+      <Filter>소스 파일\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLogic.h">
@@ -40,6 +70,30 @@
     </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghost.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>헤더 파일\States</Filter>
+    </ClInclude>
+    <ClInclude Include="HunterState.h">
+      <Filter>헤더 파일\States</Filter>
+    </ClInclude>
+    <ClInclude Include="HuntedState.h">
+      <Filter>헤더 파일\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EatenState.h">
+      <Filter>헤더 파일\States</Filter>
+    </ClInclude>
+    <ClInclude Include="InBoxState.h">
+      <Filter>헤더 파일\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

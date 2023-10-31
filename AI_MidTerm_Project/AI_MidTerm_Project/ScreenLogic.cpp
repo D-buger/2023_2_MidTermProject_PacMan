@@ -12,6 +12,8 @@ ScreenLogic::~ScreenLogic()
 void ScreenLogic::InitScreen()
 {
 	SetConsoleTitle(TEXT("202213037_MidtermProject_PacMan"));
+	system(" mode  con lines=35   cols=60 ");
+
 
 	CONSOLE_CURSOR_INFO cci;
 
@@ -44,10 +46,13 @@ void ScreenLogic::ScreenRelease()
 	CloseHandle(hScreen[1]);
 }
 
-void ScreenLogic::ScreenPrint(COORD _playerPos, char* _c)
+void ScreenLogic::ScreenPrint(COORD _playerPos, char* _c, byte _color)
 {
 	DWORD dw;
-	COORD cursorPos = { _playerPos.X * 2, _playerPos.Y };
+	COORD cursorPos = { _playerPos.X * 2, _playerPos.Y }; 
+	
+	SetConsoleTextAttribute(hScreen[screenIndex], _color);
+	
 	SetConsoleCursorPosition(hScreen[screenIndex], cursorPos);
 	WriteFile(hScreen[screenIndex], _c, strlen(_c), &dw, NULL);
 }

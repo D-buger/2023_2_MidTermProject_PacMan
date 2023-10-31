@@ -127,15 +127,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EatenState.cpp" />
     <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Ghost.cpp" />
+    <ClCompile Include="HuntedState.cpp" />
+    <ClCompile Include="HunterState.cpp" />
+    <ClCompile Include="InBoxState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapLogic.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScreenLogic.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EatenState.h" />
     <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Ghost.h" />
+    <ClInclude Include="HuntedState.h" />
+    <ClInclude Include="HunterState.h" />
+    <ClInclude Include="InBoxState.h" />
     <ClInclude Include="MapLogic.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenLogic.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,28 +1,19 @@
 #pragma once
 
 #include "Util.h"
+#include "Player.h"
 
 #include <filesystem>
 #include <fstream>
-
-enum eMap {
-	E_MAP_EMPTY			= 0,
-	E_MAP_WALL			= 1,
-	E_MAP_PLAYER		= 2,
-	E_MAP_FOOD			= 3,
-	E_MAP_POWERCOOKIE	= 4,
-	E_MAP_GHOST			= 5,
-
-	E_MAP_TELEPORT_R	= 6,
-	E_MAP_TELEPORT_L	= 7,
-};
+#include <sstream>
+#include<cstdlib>
 
 class MapLogic
 {
 private:
-	int** map;
+	eMap map[SCREEN_HEIGHT][SCREEN_WIDTH];
 
-	COORD player;
+	Player player;
 
 public:
 	MapLogic();
@@ -30,6 +21,10 @@ public:
 
 	void LoadMap();
 
-	char* GetMap(COORD _pos);
+	eMap GetMap(COORD _pos);
+	char* GetMapIcon(COORD _pos);
+	void SetMap(COORD _pos, eMap _obj);
+
+	Player* GetPlayer() { return &player; }
 };
 

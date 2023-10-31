@@ -16,7 +16,7 @@ public:
 	void ScreenFlipping();
 	void ScreenClear();
 	void ScreenRelease();
-	void ScreenPrint(COORD _playerPos, char* _c);
+	void ScreenPrint(COORD _playerPos, char* _c, byte _color = FOREGROUND_WHITE);
 
 };
 
