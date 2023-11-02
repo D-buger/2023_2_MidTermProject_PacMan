@@ -14,6 +14,14 @@ const COORD operator+(const COORD& ca, const COORD& cb)
 	return c;
 }
 
+const COORD operator-(const COORD& ca, const COORD& cb)
+{
+	COORD c = { ca.X, ca.Y };
+	c.X -= cb.X;
+	c.Y -= cb.Y;
+	return c;
+}
+
 const bool operator==(const COORD& ca, const COORD& cb)
 {
 	return (ca.X == cb.X) && (ca.Y == cb.Y);

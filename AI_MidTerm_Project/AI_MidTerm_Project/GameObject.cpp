@@ -4,7 +4,6 @@
 void GameObject::Update(MapLogic* _map, eDirection _moveDir)
 {
 	Move(_map, _moveDir);
-	CheckInMap(_map);
 }
 
 void GameObject::Move(MapLogic* _map, eDirection _moveDir)
@@ -70,10 +69,6 @@ void GameObject::Move(MapLogic* _map, eDirection _moveDir)
 	case E_NULL:
 		break;
 	}
-}
-
-void GameObject::CheckInMap(MapLogic* _map)
-{
 }
 
 void GameObject::StateUpdate()

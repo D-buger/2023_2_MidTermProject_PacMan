@@ -3,13 +3,16 @@
 
 class HuntedState :  public State
 {
+private:
+	float timer = 0;
+	byte color;
 public:
 	HuntedState();
 	~HuntedState();
 
-	void Enter(Ghost*) override;
-	void Execute(Ghost*) override;
-	void Exit(Ghost*) override;
+	void Enter(Ghost* _g) override;
+	void Execute(Ghost* _g) override;
+	void Exit(Ghost* _g) override;
 
 private:
 	static HuntedState* instance;

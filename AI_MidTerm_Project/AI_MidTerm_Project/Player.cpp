@@ -2,7 +2,12 @@
 
 eMap Player::GetType()
 {
-    return (eMap)(playerState + playerAnimState);
+    return (eMap)(stateIcon + playerAnimState);
+}
+
+void Player::Update(MapLogic* _map, eDirection _moveDir)
+{
+    GameObject::Update(_map, _moveDir);
 }
 
 void Player::Move(MapLogic* _map, eDirection _moveDir)
@@ -10,11 +15,6 @@ void Player::Move(MapLogic* _map, eDirection _moveDir)
     GameObject::Move(_map, _moveDir);
 }
 
-void Player::CheckInMap(MapLogic* _map)
-{
-    
-
-}
 
 void Player::StateUpdate()
 {
@@ -28,16 +28,16 @@ void Player::SetState(eDirection _dir)
     case E_NULL:
         break;
     case E_UP:
-        playerState = E_PLAYER_UP;
+        stateIcon = E_PLAYER_UP;
         break;
     case E_LEFT:
-        playerState = E_PLAYER_LEFT;
+        stateIcon = E_PLAYER_LEFT;
         break;
     case E_RIGHT:
-        playerState = E_PLAYER_RIGHT;
+        stateIcon = E_PLAYER_RIGHT;
         break;
     case E_DOWN:
-        playerState = E_PLAYER_DOWN;
+        stateIcon = E_PLAYER_DOWN;
         break;
     default:
         break;

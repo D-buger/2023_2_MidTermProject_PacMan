@@ -8,19 +8,26 @@ EatenState::EatenState()
 
 EatenState::~EatenState()
 {
-	if (instance != nullptr)
-		delete instance;
+	//if (instance != nullptr)
+	//	delete instance;
 }
 
-void EatenState::Enter(Ghost*)
+void EatenState::Enter(Ghost* _g)
 {
+	_g->SetStateIcon(eScreenIcon::E_GHOST_EATEN);
 }
 
-void EatenState::Execute(Ghost*)
+#include "InBoxState.h"
+void EatenState::Execute(Ghost* _g)
 {
+	_g->SetTargetToNULL();
+
+	if (_g->GetIsCollisionGhostBox()) {
+		_g->ChangeState(InBoxState::Instance());
+	}
 }
 
-void EatenState::Exit(Ghost*)
+void EatenState::Exit(Ghost* _g)
 {
 }
 

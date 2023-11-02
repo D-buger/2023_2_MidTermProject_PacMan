@@ -4,6 +4,8 @@
 #include <iostream>
 #include<stdio.h>
 #include<conio.h>
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
 #define ARROW_KEY 224
@@ -18,7 +20,10 @@ using namespace std;
 
 #define PLAYER_ANIM_END 3
 
-#define GHOST_NUM 4
+#define GHOSTBOX_X 12
+#define GHOSTBOX_Y 13
+
+#define GHOST_NUM 1
 
 enum eDirection : int {
 	E_NULL = 0,
@@ -76,6 +81,7 @@ const static char* SCREEN_ICONS[]
 COORD MakeCoord(int x, int y);
 
 const COORD operator+(const COORD& ca, const COORD& cb);
+const COORD operator-(const COORD& ca, const COORD& cb);
 
 const bool operator==(const COORD& ca, const COORD& cb);
 
@@ -108,4 +114,14 @@ const bool operator==(const COORD& ca, const COORD& cb);
 	Hunted 상태의 고스트는 일정 시간이 지나면 Hunter 상태로 바뀐다.
 	고스트가 Hunted 상태일 때 팩맨에게 먹히면 리스폰 장소로 되돌아간다.
 	고스트의 FSM은 state pattern 으로 구현한다.
+*/
+/*
+	고스트 위치 == 팩맨 위치 && 팩맨 상태 == 파워 쿠키		=> Eaten 상태
+	Eaten상태 && 몇 초 후									=> In-Box에서 Hunter상태로 다시 시작 (GhostBox와 Collision)	-
+	Hunter상태 && 팩맨이 근처								=> A* 알고리즘으로 쫓아감			
+	Hunter상태 && !팩맨이 근처								=> 랜덤하게 배회				
+	팩맨 상태 == 파워 쿠키									=> Hunted 상태 (팩맨으로부터 도망)							-
+	Hunter상태 && 몇 초 후									=> Hunter 상태												-
+
+	필요한 정보 : Player* (위치, 상태), Timer(float) 
 */

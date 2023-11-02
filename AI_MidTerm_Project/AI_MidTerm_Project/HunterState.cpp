@@ -8,19 +8,24 @@ HunterState::HunterState()
 
 HunterState::~HunterState()
 {
-	if (instance != nullptr)
-		delete instance;
+	//if (instance != nullptr)
+	//	delete instance;
 }
 
-void HunterState::Enter(Ghost*)
+void HunterState::Enter(Ghost* _g)
 {
+	_g->SetStateIcon(eScreenIcon::E_GHOST_HUNTER);
 }
 
-void HunterState::Execute(Ghost*)
+#include "HuntedState.h"
+void HunterState::Execute(Ghost* _g)
 {
+	if (_g->GetIsPacManEatsPill()) {
+		_g->ChangeState(HuntedState::Instance());
+	}
 }
 
-void HunterState::Exit(Ghost*)
+void HunterState::Exit(Ghost* _g)
 {
 }
 
