@@ -43,6 +43,23 @@ public:
 			return COORD({ 0, 0 });
 		}
 	}
+	static eDirection PosToDir(COORD _pos) {
+		if (_pos.X > 0) {
+			return eDirection::E_RIGHT;
+		}
+		else if (_pos.X < 0) {
+			return eDirection::E_LEFT;
+		}
+		else if (_pos.Y > 0) {
+			return eDirection::E_DOWN;
+		}
+		else if (_pos.Y < 0) {
+			return eDirection::E_UP;
+		}
+		else {
+			return eDirection::E_NULL;;
+		}
+	}
 	static eDirection OppositeDir(eDirection _dir) {
 		switch (_dir)
 		{

@@ -23,7 +23,7 @@ using namespace std;
 #define GHOSTBOX_X 12
 #define GHOSTBOX_Y 13
 
-#define GHOST_NUM 1
+#define GHOST_NUM 4
 
 enum eDirection : int {
 	E_NULL = 0,
@@ -82,7 +82,7 @@ COORD MakeCoord(int x, int y);
 
 const COORD operator+(const COORD& ca, const COORD& cb);
 const COORD operator-(const COORD& ca, const COORD& cb);
-
+const bool operator<(const COORD& ca, const COORD& cb);
 const bool operator==(const COORD& ca, const COORD& cb);
 
 

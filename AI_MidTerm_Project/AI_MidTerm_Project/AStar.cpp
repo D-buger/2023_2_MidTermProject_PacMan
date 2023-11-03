@@ -3,44 +3,38 @@
 
 void AStar::ResetPath()
 {
-	for (int i = 0; i < SCREEN_HEIGHT; i++)
-		for (int j = 0; j < SCREEN_WIDTH; j++)
+	for (int i = 0; i < SCREEN_HEIGHT; i++) {
+		for (int j = 0; j < SCREEN_WIDTH; j++) {
 			pathOfMap[i][j] = -1;
+			parent[i][j] = {0, 0};
+		}
+	}
 	while (!path.empty()) path.pop();
 	while (!visitNode.empty()) visitNode.pop_back();
 	distToTarget = -1;
 }
 
-void AStar::ExtractMin(MapLogic* _map, COORD _choicePos, COORD _direction)
+void AStar::AddToList(MapLogic* _map, COORD _choicePos)
 {
-	int min = INT_MAX;
-	int width = SCREEN_WIDTH;
-	int height = SCREEN_HEIGHT;
+	for (int ty = -1; ty <= 1; ty++) {
+		for (int tx = -1; tx <= 1; tx++) {
+			int x = _choicePos.X + tx;
+			int y = _choicePos.Y + ty;
 
-	short curX, curY;
-	list<COORD>::reverse_iterator curPos;
-	int hx, hy, hdist;
+			if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
+				continue;
+			}
 
-	for (curPos = visitNode.rbegin(); curPos != visitNode.rend(); curPos++) {
-		for (int ty = -1; ty <= 1; ty++) {
-			for (int tx = -1; tx <= 1; tx++) {
-				curX = curPos->X + tx;
-				curY = curPos->Y + ty;
+			if (_map->GetMap(MakeCoord(x, y)) == E_MAP_WALL) {
+				continue;
+			}
 
-				if (curX < 0 || curX > width - 1 || curY < 0 || curY > height - 1
-					|| (tx == 0 && ty == 0)) {
-					continue;
-				}
+			int cost = pathOfMap[_choicePos.Y][_choicePos.X] + 1;
 
-				hx = _direction.X - curX;
-				hy = _direction.X - curY;
-				hdist = hx + hy;
-
-				if (pathOfMap[curY][curX] + hdist < min ||
-					pathOfMap[curY][curX] == -1) {
-					min = pathOfMap[curY][curX] + hdist;
-					_choicePos = { curX, curY };
-				}
+			if (pathOfMap[y][x] == -1 || cost < pathOfMap[y][x]) {
+				pathOfMap[y][x] = cost;
+				queue.push(MakeCoord(x, y));
+				parent[y][x] = _choicePos;
 			}
 		}
 	}
@@ -53,67 +47,39 @@ bool AStar::FindPath(MapLogic* _map, COORD _startPos, COORD _targetPos)
 	int width = SCREEN_WIDTH;
 	int height = SCREEN_HEIGHT;
 
-	COORD parent[SCREEN_HEIGHT][SCREEN_WIDTH] = {0};
+	queue.push({_startPos.X, _startPos.Y});
+	parent[_startPos.Y][_startPos.X] = {_startPos.X, _startPos.Y};
+	pathOfMap[_startPos.Y][_startPos.X] = 0;
+	
+	while (!queue.empty()) {
+		COORD top = queue.top();
+		queue.pop();
 
-	COORD choicePos = { _startPos.X, _startPos.Y };
-	parent[_startPos.X][_startPos.Y] = choicePos;
+		if (pathOfMap[top.Y][top.X] != -1) {
+			continue;
+		}
 
-	for (int i = 0; i < width * height; i++) {
-		visitNode.push_back(choicePos);
-
-		if (choicePos.X == _targetPos.X && choicePos.Y == _targetPos.Y) {
-			distToTarget = pathOfMap[choicePos.Y][choicePos.X];
+		if (top.X == _targetPos.X && top.Y == _targetPos.Y) {
+			distToTarget = pathOfMap[top.Y][top.X];
 			break;
 		}
 
-		for (int ty = -1; ty <= 1; ty++) {
-			for (int tx = -1; tx <= 1; tx++) {
-				int nx = choicePos.X + tx;
-				int ny = choicePos.Y + ty;
-				int dist;
+		COORD topParent = parent[top.Y][top.X];
+		pathOfMap[top.Y][top.X] = pathOfMap[topParent.Y][topParent.X] + 1;
 
-				if (nx < 0 || nx > width - 1 || ny < 0 || ny > height - 1)
-					continue;
-
-				if (_map->GetMap(MakeCoord(nx, ny)) == E_MAP_WALL) {
-					pathOfMap[ny][nx] = INT_MAX;
-				}
-				else if (pathOfMap[ny][nx] == -1 && pathOfMap[ny][nx] != INT_MAX) {
-					dist = 1;
-
-					if (pathOfMap[ny][nx] > pathOfMap[choicePos.Y][choicePos.X] + dist) {
-						int tcost = pathOfMap[ny][nx] + dist;
-						pathOfMap[ny][nx] = tcost;
-						parent[ny][nx] = choicePos;
-					}
-				}
-			}
-		}
-		ExtractMin(_map ,choicePos, _targetPos);
+		AddToList(_map, _startPos);
 	}
 
 	if (distToTarget != -1) {
-		COORD p = { _targetPos.X, _targetPos.Y };
+		COORD c = {_targetPos.X, _targetPos.Y};
+		COORD p = parent[c.Y][c.X];
 		while (p.X != _startPos.X || p.Y != _startPos.Y) {
-			p = parent[p.Y][p.X];
-
-			if (p.Y < _targetPos.Y) {
-				path.push(eDirection::E_UP);
-			}
-			else {
-				path.push(eDirection::E_DOWN);
-			}
-
-			if (p.X < _targetPos.X) {
-				path.push(eDirection::E_LEFT);
-			}
-			else {
-				path.push(eDirection::E_RIGHT);
-			}
+			path.push(MapLogic::PosToDir(c - p));
+			c = p;
+			p = parent[c.Y][c.X];
 		}
 		return true;
 	}
-
 	return false;
 }
 

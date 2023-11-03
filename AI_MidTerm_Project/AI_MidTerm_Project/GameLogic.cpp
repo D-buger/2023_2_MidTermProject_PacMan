@@ -7,9 +7,9 @@ GameLogic::GameLogic()
 	map = new MapLogic();
 	
 	ghosts[0] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y}),			FOREGROUND_LIGHT_PURPLE);
-	/*ghosts[1] = new Ghost(COORD({GHOSTBOX_X + 1, GHOSTBOX_Y}),		FOREGROUND_YELLOW);
+	ghosts[1] = new Ghost(COORD({GHOSTBOX_X + 1, GHOSTBOX_Y}),		FOREGROUND_YELLOW);
 	ghosts[2] = new Ghost(COORD({GHOSTBOX_X - 1, GHOSTBOX_Y}),		FOREGROUND_LIGHT_SKYBLUE);
-	ghosts[3] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y - 1}),		FOREGROUND_RED);*/
+	ghosts[3] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y - 1}),		FOREGROUND_RED);
 
 	Update();
 }
@@ -31,7 +31,7 @@ void GameLogic::Update()
 
 		for (int i = 0; i < GHOST_NUM; i++) {
 			ghosts[i]->SetTarget(map, &player);
-			//ghosts[i]->Update(map, E_NULL);
+			ghosts[i]->Update(map, E_NULL);
 		}
 
 		Check();

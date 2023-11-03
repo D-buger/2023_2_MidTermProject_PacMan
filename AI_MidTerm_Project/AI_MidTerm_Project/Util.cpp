@@ -22,6 +22,11 @@ const COORD operator-(const COORD& ca, const COORD& cb)
 	return c;
 }
 
+const bool operator<(const COORD& ca, const COORD& cb)
+{
+	return (ca.X + ca.Y < cb.X + cb.Y);
+}
+
 const bool operator==(const COORD& ca, const COORD& cb)
 {
 	return (ca.X == cb.X) && (ca.Y == cb.Y);
