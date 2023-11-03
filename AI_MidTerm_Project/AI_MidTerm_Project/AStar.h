@@ -7,28 +7,38 @@
 
 class MapLogic;
 
+class Point {
+public:
+	COORD pos;
+	int cost;
+	bool operator<(const Point& p) const
+	{
+		return cost > p.cost;
+	}
+};
+
 class AStar
 {
 private:
-	COORD target;
-
 	stack<eDirection> path;
 	list<COORD> visitNode;
 	
-	int distToTarget = -1;
+	bool isFound = false;
 
+	bool visitInfo[SCREEN_HEIGHT][SCREEN_WIDTH];
 	int pathOfMap[SCREEN_HEIGHT][SCREEN_WIDTH];
-	COORD parent[SCREEN_HEIGHT][SCREEN_WIDTH];
-	priority_queue<COORD> queue;
+	Point parent[SCREEN_HEIGHT][SCREEN_WIDTH];
+	priority_queue<Point> queue;
 
 	void ResetPath();
 
-	void AddToList(MapLogic* _map, COORD _choicePos);
+	void AddToList(MapLogic* _map, Point _choice, COORD _targetPos);
+
 public:
 
 	bool FindPath(MapLogic* _map, COORD _startPos, COORD _targetPos);
 
-	eDirection GetDirection();
+	eDirection GetDirection(COORD _oriPos);
 	int GetDist();
 };
 

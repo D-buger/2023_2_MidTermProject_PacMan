@@ -6,10 +6,10 @@ GameLogic::GameLogic()
 	screen = new ScreenLogic(SCREEN_WIDTH, SCREEN_HEIGHT);
 	map = new MapLogic();
 	
-	ghosts[0] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y}),			FOREGROUND_LIGHT_PURPLE);
-	ghosts[1] = new Ghost(COORD({GHOSTBOX_X + 1, GHOSTBOX_Y}),		FOREGROUND_YELLOW);
-	ghosts[2] = new Ghost(COORD({GHOSTBOX_X - 1, GHOSTBOX_Y}),		FOREGROUND_LIGHT_SKYBLUE);
-	ghosts[3] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y - 1}),		FOREGROUND_RED);
+	ghosts[0] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y}),			FOREGROUND_LIGHT_PURPLE		, 0);
+	ghosts[1] = new Ghost(COORD({GHOSTBOX_X + 1, GHOSTBOX_Y}),		FOREGROUND_YELLOW			, 100);
+	ghosts[2] = new Ghost(COORD({GHOSTBOX_X - 1, GHOSTBOX_Y}),		FOREGROUND_LIGHT_SKYBLUE	, 200);
+	ghosts[3] = new Ghost(COORD({GHOSTBOX_X, GHOSTBOX_Y - 1}),		FOREGROUND_RED				, 300);
 
 	Update();
 }
@@ -66,6 +66,18 @@ void GameLogic::Draw()
 
 void GameLogic::Check()
 {
+	for (int i = 0; i < GHOST_NUM; i++) {
+		ghosts[i]->SetIsCollisionPacMan(false);
+		ghosts[i]->SetIsCollisionGhostBox(false);
+
+		if (player.pos == ghosts[i]->pos) {
+			ghosts[i]->SetIsCollisionPacMan(true);
+		}
+		if (ghosts[i]->pos == COORD({ GHOSTBOX_X, GHOSTBOX_Y })) {
+			ghosts[i]->SetIsCollisionGhostBox(true);
+		}
+	}
+
 	if (map->GetMap(player.pos) == eMap::E_MAP_FOOD) {
 		map->SetMap(player.pos, eMap::E_MAP_EMPTY);
 		score++;
@@ -77,11 +89,6 @@ void GameLogic::Check()
 		}
 	}
 
-	for (int i = 0; i < GHOST_NUM; i++) {
-		if (player.pos == ghosts[i]->pos) {
-			ghosts[i]->SetIsCollisionPacMan(true);
-		}
-	}
 }
 
 void GameLogic::Input()

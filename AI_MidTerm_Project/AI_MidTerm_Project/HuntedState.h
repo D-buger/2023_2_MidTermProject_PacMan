@@ -5,7 +5,6 @@ class HuntedState :  public State
 {
 private:
 	float timer = 0;
-	byte color;
 public:
 	HuntedState();
 	~HuntedState();

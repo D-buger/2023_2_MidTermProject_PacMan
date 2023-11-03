@@ -23,6 +23,7 @@ void EatenState::Execute(Ghost* _g)
 	_g->SetTargetToNULL();
 
 	if (_g->GetIsCollisionGhostBox()) {
+		_g->SetIsCollisionGhostBox(false);
 		_g->ChangeState(InBoxState::Instance());
 	}
 }

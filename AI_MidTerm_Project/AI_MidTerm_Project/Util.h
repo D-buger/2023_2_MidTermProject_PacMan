@@ -59,7 +59,6 @@ enum eScreenIcon : int {
 	E_FOOD			,		//д¤
 	E_PILL			,		//б▄
 	E_WALL			,		//бс
-	E_WALL_GHOSTBOX	,		//бы
 };
 
 const static char* SCREEN_ICONS[]

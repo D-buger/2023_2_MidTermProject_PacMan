@@ -23,6 +23,9 @@ void HunterState::Execute(Ghost* _g)
 	if (_g->GetIsPacManEatsPill()) {
 		_g->ChangeState(HuntedState::Instance());
 	}
+	if (_g->GetIsCollisionPacMan()) {
+		exit(0);
+	}
 }
 
 void HunterState::Exit(Ghost* _g)

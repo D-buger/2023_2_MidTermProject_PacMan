@@ -7,11 +7,10 @@
 class State;
 class Player;
 
-const static float END_TIME_OF_HUNTED = 50;	//Hunted 상태가 끝나는 시간
+const static float END_TIME_OF_HUNTED = 150;	//Hunted 상태가 끝나는 시간
 const static float END_TIME_OF_INBOX = 20;	//In-Box 상태가 끝나는 시간
 
-const int RANDOM_DISTANCE = 5;				//랜덤하게 돌아다니는 거리
-const int RECOGNIZE_PLAYER = 8;				//플레이어 인식 거리
+const int RECOGNIZE_PLAYER = 15;				//플레이어 인식 거리
 
 class Ghost : public GameObject
 {
@@ -25,8 +24,12 @@ private:
 	AStar path;
 
 	Player* target = nullptr;
+
+	bool canMove = true;
 public:
-	Ghost(COORD _pos, byte _color);
+	const byte oriColor;
+
+	Ghost(COORD _pos, byte _color, int _startTime);
 	~Ghost();
 
 	void SetTargetToNULL();
@@ -38,6 +41,8 @@ public:
 	void SetIsCollisionPacMan(bool _isCollision) { isCollisionPacMan = _isCollision; }
 	bool GetIsCollisionGhostBox() { return isCollisionGhostBox; }
 	void SetIsCollisionGhostBox(bool _isCollision) { isCollisionGhostBox = _isCollision; }
+	bool GetCanMove() { return canMove; }
+	void SetCanMove(bool _canMove) { canMove = _canMove; }
 
 	// GameObject을(를) 통해 상속됨
 	eMap GetType() override;

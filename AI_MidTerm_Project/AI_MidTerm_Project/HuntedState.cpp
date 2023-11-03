@@ -14,11 +14,9 @@ HuntedState::~HuntedState()
 
 void HuntedState::Enter(Ghost* _g)
 {
-	_g->SetIsPacManEatsPill(false);
 	timer = 0;
 	_g->SetStateIcon(eScreenIcon::E_GHOST_HUNTED);
 
-	color = _g->COLOR;
 	_g->COLOR = FOREGROUND_BLUE;
 }
 
@@ -26,22 +24,25 @@ void HuntedState::Enter(Ghost* _g)
 #include "EatenState.h"
 void HuntedState::Execute(Ghost* _g)
 {
+	timer++;
 	if (_g->GetIsCollisionPacMan()) {
+		_g->SetIsPacManEatsPill(false);
 		_g->SetIsCollisionPacMan(false);
 		_g->ChangeState(EatenState::Instance());
 	}
-
 	else if (timer >= END_TIME_OF_HUNTED) {
+		_g->SetIsPacManEatsPill(false);
 		_g->ChangeState(HunterState::Instance());
 	}
 	else {
-		timer++;
+		_g->SetCanMove(!_g->GetCanMove());
 	}
 }
 
 void HuntedState::Exit(Ghost* _g)
 {
-	_g->COLOR = color;
+	_g->SetCanMove(true);
+	_g->COLOR = _g->oriColor;
 }
 
 HuntedState* HuntedState::Instance()

@@ -3,11 +3,11 @@
 #include "Player.h"
 #include "MapLogic.h"
 
-#include "HuntedState.h"
-Ghost::Ghost(COORD _pos, byte _color) : GameObject(_pos, _color)
+#include "HunterState.h"
+Ghost::Ghost(COORD _pos, byte _color, int _startTime) : GameObject(_pos, _color), oriColor(_color)
 {
 	stateIcon = E_GHOST_HUNTER;
-	currentState = HuntedState().Instance();
+	currentState = HunterState().Instance();
 }
 
 Ghost::~Ghost()
@@ -22,9 +22,6 @@ void Ghost::SetTargetToNULL()
 
 void Ghost::SetTarget(MapLogic* _map, Player* _player)
 {
-	isCollisionPacMan = (this->pos == _player->pos);
-	isCollisionGhostBox = (this->pos == COORD({GHOSTBOX_X, GHOSTBOX_Y}));
-
 	target = _player;
 }
 
@@ -45,28 +42,65 @@ void Ghost::Update(MapLogic* _map, eDirection _moveDir)
 {
 	currentState->Execute(this);
 
-	if (target != nullptr) {
-		path.FindPath(_map, this->pos, target->pos);	//매우 무거움
-		
-		if (isPacManEatsPill) {											//플레이어가 알약을 먹었을 때
-			moveDir = MapLogic::OppositeDir(path.GetDirection());
-		}
-		else if (path.GetDist() <= RECOGNIZE_PLAYER) {					//플레이어가 탐지 범위 안에 들어왔을 때
-			moveDir = path.GetDirection();
-		}
-		else if(moveDir == E_NULL){										//가야할 방향이 정해져있지 않을 때
-			moveDir = (eDirection)(rand() % 4 + 1);
-		}
-		else if(_map->GetMap(this->pos + MapLogic::DirToPos(moveDir)) == E_MAP_WALL){	//가야할 방향은 있으나 그 앞이 벽일 때
-			moveDir = E_NULL;
-		}
-	}
-	else {
-		path.FindPath(_map, this->pos, COORD({GHOSTBOX_X, GHOSTBOX_Y}));
-	}
+	if (canMove) {
+		if (target != nullptr) {
+			path.FindPath(_map, this->pos, target->pos);
 
+			if (isPacManEatsPill) {											//플레이어가 알약을 먹었을 때
+				COORD playerDir = target->pos - this->pos;
 
-	GameObject::Update(_map, moveDir);
+				eDirection eDir[4] = { E_NULL, E_NULL , E_NULL , E_NULL };
+				int num = 0;
+				if (_map->GetMap(this->pos + MakeCoord(1, 0)) != E_MAP_WALL
+					&& playerDir.X <= 0) {
+					eDir[num++] = eDirection::E_RIGHT;
+				}
+				if (_map->GetMap(this->pos + MakeCoord(-1, 0)) != E_MAP_WALL
+					&& playerDir.X >= 0) {
+					eDir[num++] = eDirection::E_LEFT;
+				}
+				if (_map->GetMap(this->pos + MakeCoord(0, 1)) != E_MAP_WALL
+					&& playerDir.Y <= 0) {
+					eDir[num++] = eDirection::E_DOWN;
+				}
+				if (_map->GetMap(this->pos + MakeCoord(0, -1)) != E_MAP_WALL
+					&& playerDir.Y >= 0) {
+					eDir[num++] = eDirection::E_UP;
+				}
+
+				if (num > 0) {
+					moveDir = eDir[rand() % num];
+				}
+
+			}
+			else if (path.GetDist() <= RECOGNIZE_PLAYER) {					//플레이어가 탐지 범위 안에 들어왔을 때
+				moveDir = path.GetDirection(this->pos);
+			}
+			else {										//가야할 방향이 정해져있지 않을 때
+				eDirection eRandDir[4] = { E_NULL, E_NULL , E_NULL , E_NULL };
+				int num = 0;
+				if (_map->GetMap(this->pos + MakeCoord(1, 0)) != E_MAP_WALL) {
+					eRandDir[num++] = eDirection::E_RIGHT;
+				}
+				if (_map->GetMap(this->pos + MakeCoord(-1, 0)) != E_MAP_WALL) {
+					eRandDir[num++] = eDirection::E_LEFT;
+				}
+				if (_map->GetMap(this->pos + MakeCoord(0, 1)) != E_MAP_WALL) {
+					eRandDir[num++] = eDirection::E_DOWN;
+				}
+				if (_map->GetMap(this->pos + MakeCoord(0, -1)) != E_MAP_WALL) {
+					eRandDir[num++] = eDirection::E_UP;
+				}
+				moveDir = eRandDir[rand() % num];
+			}
+		}
+		else {
+			path.FindPath(_map, this->pos, COORD({ GHOSTBOX_X, GHOSTBOX_Y }));
+			moveDir = path.GetDirection(this->pos);
+		}
+
+		GameObject::Update(_map, moveDir);
+	}
 }
 
 void Ghost::Move(MapLogic* _map, eDirection _moveDir)

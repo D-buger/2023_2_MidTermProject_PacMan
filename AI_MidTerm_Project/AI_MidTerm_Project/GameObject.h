@@ -27,5 +27,7 @@ public:
 	virtual void SetState(eDirection _dir);
 	
 	void SetStateIcon(eScreenIcon _icon) { stateIcon = _icon; }
+
+	void SetMoveDirection(eDirection _dir) { moveDir = _dir; }
 };
 

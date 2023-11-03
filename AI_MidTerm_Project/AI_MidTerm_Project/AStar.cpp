@@ -6,20 +6,22 @@ void AStar::ResetPath()
 	for (int i = 0; i < SCREEN_HEIGHT; i++) {
 		for (int j = 0; j < SCREEN_WIDTH; j++) {
 			pathOfMap[i][j] = -1;
-			parent[i][j] = {0, 0};
+			visitInfo[i][j] = false;
 		}
 	}
+	while (!queue.empty()) queue.pop();
 	while (!path.empty()) path.pop();
 	while (!visitNode.empty()) visitNode.pop_back();
-	distToTarget = -1;
 }
 
-void AStar::AddToList(MapLogic* _map, COORD _choicePos)
+void AStar::AddToList(MapLogic* _map, Point _choice, COORD _targetPos)
 {
-	for (int ty = -1; ty <= 1; ty++) {
-		for (int tx = -1; tx <= 1; tx++) {
-			int x = _choicePos.X + tx;
-			int y = _choicePos.Y + ty;
+	int yy[] = {0, 0, 1, -1};
+	int xx[] = {1, -1, 0, 0};
+
+	for (int i = 0; i < 4; i++) {
+			int x = _choice.pos.X + xx[i];
+			int y = _choice.pos.Y + yy[i];
 
 			if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
 				continue;
@@ -29,14 +31,13 @@ void AStar::AddToList(MapLogic* _map, COORD _choicePos)
 				continue;
 			}
 
-			int cost = pathOfMap[_choicePos.Y][_choicePos.X] + 1;
+			int cost = _choice.cost + abs(_targetPos.X - x) + abs(_targetPos.Y - y);
 
-			if (pathOfMap[y][x] == -1 || cost < pathOfMap[y][x]) {
+			if (!visitInfo[y][x] && (cost < pathOfMap[y][x] || pathOfMap[y][x] == -1)) {
 				pathOfMap[y][x] = cost;
-				queue.push(MakeCoord(x, y));
-				parent[y][x] = _choicePos;
+				queue.push({MakeCoord(x, y), cost});
+				parent[y][x] = _choice;
 			}
-		}
 	}
 }
 
@@ -44,48 +45,58 @@ bool AStar::FindPath(MapLogic* _map, COORD _startPos, COORD _targetPos)
 {
 	ResetPath();
 
-	int width = SCREEN_WIDTH;
-	int height = SCREEN_HEIGHT;
-
-	queue.push({_startPos.X, _startPos.Y});
+	queue.push({_startPos.X, _startPos.Y, 0});
 	parent[_startPos.Y][_startPos.X] = {_startPos.X, _startPos.Y};
 	pathOfMap[_startPos.Y][_startPos.X] = 0;
 	
 	while (!queue.empty()) {
-		COORD top = queue.top();
+		Point top = queue.top();
 		queue.pop();
 
-		if (pathOfMap[top.Y][top.X] != -1) {
+		if (visitInfo[top.pos.Y][top.pos.X]) {
 			continue;
 		}
+		else {
+			visitInfo[top.pos.Y][top.pos.X] = true;
+		}
 
-		if (top.X == _targetPos.X && top.Y == _targetPos.Y) {
-			distToTarget = pathOfMap[top.Y][top.X];
+		if (top.pos.X == _targetPos.X && top.pos.Y == _targetPos.Y) {
+			isFound = true;
 			break;
 		}
 
-		COORD topParent = parent[top.Y][top.X];
-		pathOfMap[top.Y][top.X] = pathOfMap[topParent.Y][topParent.X] + 1;
-
-		AddToList(_map, _startPos);
+		AddToList(_map, top, _targetPos);
 	}
 
-	if (distToTarget != -1) {
+	if (isFound) {
 		COORD c = {_targetPos.X, _targetPos.Y};
-		COORD p = parent[c.Y][c.X];
-		while (p.X != _startPos.X || p.Y != _startPos.Y) {
-			path.push(MapLogic::PosToDir(c - p));
+		COORD p = parent[c.Y][c.X].pos;
+		while (c.X != _startPos.X || c.Y != _startPos.Y) {
+			if (c.Y < p.Y) {
+				path.push(eDirection::E_UP);
+			}
+			else if (c.Y > p.Y) {
+				path.push(eDirection::E_DOWN);
+			}
+
+			if (c.X < p.X) {
+				path.push(eDirection::E_LEFT);
+			}
+			else if (c.X > p.X) {
+				path.push(eDirection::E_RIGHT);
+			}
+
 			c = p;
-			p = parent[c.Y][c.X];
+			p = parent[c.Y][c.X].pos;
 		}
 		return true;
 	}
 	return false;
 }
 
-eDirection AStar::GetDirection()
+eDirection AStar::GetDirection(COORD _oriPos)
 {
-	if (distToTarget != -1) {
+	if (isFound && !path.empty()) {
 		eDirection top = path.top();
 		path.pop();
 		return top;
@@ -95,5 +106,5 @@ eDirection AStar::GetDirection()
 
 int AStar::GetDist()
 {
-	return distToTarget;
+	return path.size();
 }
